@@ -21,7 +21,7 @@ class UserRegister(Resource):
             return {"message": "username exists"}, 400
 
         user.save_to_db()
-
+        user.send_confirmation_email()
         return {"message": "you are now registered"}, 201
 
 
@@ -43,3 +43,13 @@ class UserLogin(Resource):
                 )
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401
+
+class UserVerify(Resource):
+    @classmethod
+    def post(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"error": "User does not exist"}, 404
+
+        if user.activated:
+            return {"message": "user is already activated"}, 400

@@ -4,8 +4,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from dotenv import load_dotenv
 from db import db
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+
 from resources.user import UserRegister, UserLogin
 from flask_jwt_extended import JWTManager
 
