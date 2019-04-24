@@ -5,7 +5,7 @@ from flask_restful import Api
 from dotenv import load_dotenv
 from db import db
 
-from resources.user import UserRegister, UserLogin
+from resources.user import UserRegister, UserLogin, UserVerify
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -28,6 +28,7 @@ def create_tables():
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
+api.add_resource(UserVerify, "/confirmation/<int:user_id>")
 
 
 if __name__ == "__main__":

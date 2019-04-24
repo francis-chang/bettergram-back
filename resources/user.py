@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, make_response, render_template
 from flask_jwt_extended import create_access_token, create_refresh_token
 from models.user import UserModel
 from schemas.user import UserSchema
@@ -44,7 +44,23 @@ class UserLogin(Resource):
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401
 
+
 class UserVerify(Resource):
+    @classmethod
+    def get(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": "No user with id"}, 404
+        if user.activated:
+            return {"message": "user is already activated"}, 400
+
+        user.activated = True
+        user.save_to_db()
+        headers = {"Content-Type": "text/html"}
+        return make_response(
+            render_template("email_confirm.html", email=user.email), 200, headers
+        )
+
     @classmethod
     def post(cls, user_id):
         user = UserModel.find_by_id(user_id)
@@ -53,3 +69,10 @@ class UserVerify(Resource):
 
         if user.activated:
             return {"message": "user is already activated"}, 400
+        try:
+
+            user.send_confirmation_email()
+            return {"message": "confirmation resend successful"}, 201
+
+        except:
+            return {"message": "confirmation resend fail"}, 500
