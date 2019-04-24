@@ -8,6 +8,7 @@ from argon2 import PasswordHasher, exceptions
 user_schema = UserSchema()
 ph = PasswordHasher()
 
+
 class UserRegister(Resource):
     @classmethod
     def post(cls):
@@ -36,6 +37,9 @@ class UserLogin(Resource):
             if user and ph.verify(user.password, user_data.password):
                 access_token = create_access_token(identity=user.id, fresh=True)
                 refresh_token = create_refresh_token(user.id)
-                return {"access_token": access_token, "refresh_token": refresh_token}, 200
+                return (
+                    {"access_token": access_token, "refresh_token": refresh_token},
+                    200,
+                )
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401

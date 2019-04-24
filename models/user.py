@@ -8,6 +8,7 @@ class UserModel(db.Model):
     username = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
+    activated = db.Column(db.Boolean, nullable=False, default=False)
 
     @classmethod
     def find_by_username(cls, username: str):
