@@ -2,9 +2,11 @@ import os
 
 from flask import Flask, jsonify
 from flask_restful import Api
-from authlib.flask.client import OAuth
+
 from dotenv import load_dotenv
 from db import db
+from oauth import oauth
+from ma import ma
 
 from resources.user import UserRegister, UserLogin, UserVerify, TokenRefresh
 from flask_jwt_extended import JWTManager
@@ -19,7 +21,6 @@ app.config.from_envvar(
 )  # override with config.py (APPLICATION_SETTINGS points to config.py)
 app.secret_key = os.environ.get("SECRET_KEY")
 jwt = JWTManager(app)
-oauth = OAuth(app)
 
 api = Api(app)
 
@@ -36,4 +37,6 @@ api.add_resource(TokenRefresh, "/refresh")
 
 if __name__ == "__main__":
     db.init_app(app)
+    ma.init_app(app)
+    oauth.init_app(app)
     app.run(port=5000, debug=True)

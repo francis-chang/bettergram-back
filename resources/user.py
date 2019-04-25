@@ -16,8 +16,6 @@ user_schema = UserSchema()
 ph = PasswordHasher()
 
 
-
-
 class UserRegister(Resource):
     @classmethod
     def post(cls):
