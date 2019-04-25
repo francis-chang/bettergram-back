@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, jsonify
 from flask_restful import Api
+from authlib.flask.client import OAuth
+from loginpass import create_flask_blueprint, GitHub
 from dotenv import load_dotenv
 from db import db
 
@@ -10,6 +12,7 @@ from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 
+
 load_dotenv(".env", verbose=True)
 app.config.from_object("default_config")  # load default configs from default_config.py
 app.config.from_envvar(
@@ -17,6 +20,7 @@ app.config.from_envvar(
 )  # override with config.py (APPLICATION_SETTINGS points to config.py)
 app.secret_key = os.environ.get("SECRET_KEY")
 jwt = JWTManager(app)
+oauth = OAuth(app)
 
 api = Api(app)
 

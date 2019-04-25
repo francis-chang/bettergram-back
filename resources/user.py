@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from models.user import UserModel
 from schemas.user import UserSchema
 from argon2 import PasswordHasher, exceptions
+import datetime
 
 user_schema = UserSchema()
 ph = PasswordHasher()
@@ -35,7 +36,8 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                access_token = create_access_token(identity=user.id, fresh=True)
+                delta = datetime.timedelta(hours=3)
+                access_token = create_access_token(identity=user.id, fresh=True, expires_delta=delta)
                 refresh_token = create_refresh_token(user.id)
                 return (
                     {"access_token": access_token, "refresh_token": refresh_token},
