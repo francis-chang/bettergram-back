@@ -3,11 +3,10 @@ import os
 from flask import Flask, jsonify
 from flask_restful import Api
 from authlib.flask.client import OAuth
-from loginpass import create_flask_blueprint, GitHub
 from dotenv import load_dotenv
 from db import db
 
-from resources.user import UserRegister, UserLogin, UserVerify
+from resources.user import UserRegister, UserLogin, UserVerify, TokenRefresh
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -33,7 +32,7 @@ def create_tables():
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserVerify, "/confirmation/<int:user_id>")
-
+api.add_resource(TokenRefresh, "/refresh")
 
 if __name__ == "__main__":
     db.init_app(app)

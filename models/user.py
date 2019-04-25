@@ -5,7 +5,6 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from flask import request, url_for
 
-
 class UserModel(db.Model):
     __tablename__ = "users"
 
