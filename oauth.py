@@ -19,5 +19,5 @@ github = oauth.remote_app(
 
 @github.tokengetter
 def get_github_token():
-    if 'access_token' in g:
+    if "access_token" in g:
         return g.access_token
