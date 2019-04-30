@@ -6,7 +6,7 @@ from flask_jwt_extended import (
     jwt_refresh_token_required,
     get_jwt_identity,
     jwt_required,
-    fresh_jwt_required
+    fresh_jwt_required,
 )
 from models.user import UserModel
 from schemas.user import UserSchema
@@ -16,6 +16,7 @@ import datetime
 
 user_schema = UserSchema()
 ph = PasswordHasher()
+
 
 class User(Resource):
     @classmethod
@@ -35,7 +36,6 @@ class User(Resource):
             user.save_to_db()
             return {"message": "sucessful update of username"}, 201
         return {"message": "User does not exist"}, 400
-
 
 
 class UserRegister(Resource):
