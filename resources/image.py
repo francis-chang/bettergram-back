@@ -14,7 +14,8 @@ class Image(Resource):
         image = request.files["image"]
 
         if image:
-            uploaded_image = upload(image)
+            user_id = get_jwt_identity()
+            uploaded_image = upload(image, folder="{}".format(user_id))
             image_sizes = ImageModel.find_dimensions(image)
             width = image_sizes[0]
             height = image_sizes[1]
@@ -49,7 +50,7 @@ class Image(Resource):
                 is_long = False
 
             full_size_url = cloudinary_url(uploaded_image["public_id"], format="jpg")[0]
-            user_id = get_jwt_identity()
+
             image_obj = ImageModel(
                 caption=caption,
                 url=url,
