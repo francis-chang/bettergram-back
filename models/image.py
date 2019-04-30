@@ -51,7 +51,6 @@ class ImageModel(db.Model):
     def json(self):
         dict = {
             "id": self.id,
-            "name": self.name,
             "url": self.url,
             "full_url": self.full_size_url,
             "height": self.height,

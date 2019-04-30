@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify
 from flask_restful import Api
 from dotenv import load_dotenv
+import cloudinary
 
 load_dotenv(".env", verbose=True)
 
@@ -31,6 +32,12 @@ app.config.from_envvar(
 )  # override with config.py (APPLICATION_SETTINGS points to config.py)
 app.secret_key = os.environ.get("SECRET_KEY")
 jwt = JWTManager(app)
+
+cloudinary.config(
+    cloud_name=os.environ.get("CL_CLOUD_NAME"),
+    api_key=os.environ.get("CL_API_KEY"),
+    api_secret=os.environ.get("CL_API_SECRET"),
+)
 
 api = Api(app)
 

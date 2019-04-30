@@ -9,6 +9,7 @@ from flask_jwt_extended import (
     fresh_jwt_required,
     get_raw_jwt,
 )
+from models.image import ImageModel
 from models.user import UserModel
 from schemas.user import UserSchema
 from argon2 import PasswordHasher, exceptions
