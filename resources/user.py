@@ -7,10 +7,12 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
     fresh_jwt_required,
+    get_raw_jwt
 )
 from models.user import UserModel
 from schemas.user import UserSchema
 from argon2 import PasswordHasher, exceptions
+from blacklist import BLACKLIST
 import datetime
 
 
@@ -64,7 +66,7 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                delta = datetime.timedelta(hours=3)
+                delta = datetime.timedelta(hours=1)
                 access_token = create_access_token(
                     identity=user.id, fresh=True, expires_delta=delta
                 )
@@ -75,6 +77,15 @@ class UserLogin(Resource):
                 )
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401
+
+class UserLogout(Resource):
+    @classmethod
+    @jwt_required
+    def post(cls):
+        jti = get_raw_jwt()["jti"]
+        user_id = get_jwt_identity()
+        BLACKLIST.add(jti)
+        return {"message": "Successfully logged out"}, 200
 
 
 class UserVerify(Resource):
@@ -115,5 +126,5 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(cls):
         current_user = get_jwt_identity()
-        new_token = create_access_token(identity=current_user, fresh=False)
+        new_token = create_access_token(identity=current_user, fresh=False, expires_delta=False)
         return {"access_token": new_token}, 200

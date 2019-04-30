@@ -11,6 +11,7 @@ from ma import ma
 from resources.user import UserRegister, UserLogin, UserVerify, TokenRefresh, User
 from flask_jwt_extended import JWTManager
 from resources.github_login import GithubLogin, GithubAuthorize
+from blacklist import BLACKLIST
 
 app = Flask(__name__)
 
@@ -28,6 +29,10 @@ api = Api(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_bl(decrypted_token):
+    return decrypted_token["jti"] in BLACKLIST
 
 
 api.add_resource(UserRegister, "/register")
