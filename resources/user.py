@@ -5,6 +5,8 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_refresh_token_required,
     get_jwt_identity,
+    jwt_required,
+    fresh_jwt_required
 )
 from models.user import UserModel
 from schemas.user import UserSchema
@@ -14,6 +16,26 @@ import datetime
 
 user_schema = UserSchema()
 ph = PasswordHasher()
+
+class User(Resource):
+    @classmethod
+    @jwt_required
+    def put(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        identity = get_jwt_identity()
+        authed_user = UserModel.find_by_id(identity)
+        if user:
+            if user.username != authed_user.username:
+                return {"message": "unauthorized"}, 401
+
+            user_json = request.get_json()
+            username = user_json["username"]
+
+            user.username = username
+            user.save_to_db()
+            return {"message": "sucessful update of username"}, 201
+        return {"message": "User does not exist"}, 400
+
 
 
 class UserRegister(Resource):

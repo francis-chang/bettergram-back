@@ -8,7 +8,7 @@ load_dotenv(".env", verbose=True)
 from db import db
 from oauth import oauth
 from ma import ma
-from resources.user import UserRegister, UserLogin, UserVerify, TokenRefresh
+from resources.user import UserRegister, UserLogin, UserVerify, TokenRefresh, User
 from flask_jwt_extended import JWTManager
 from resources.github_login import GithubLogin, GithubAuthorize
 
@@ -32,6 +32,7 @@ def create_tables():
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
+api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserVerify, "/confirmation/<int:user_id>")
 api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(GithubLogin, "/login/github")
