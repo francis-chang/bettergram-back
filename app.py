@@ -54,6 +54,7 @@ def expired_token_callback(expired_token):
     )
     return jsonify({"access_token": new_token}), 401
 
+
 @jwt.token_in_blacklist_loader
 def check_if_token_in_bl(decrypted_token):
     return decrypted_token["jti"] in BLACKLIST
