@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
     fresh_jwt_required,
-    get_raw_jwt
+    get_raw_jwt,
 )
 from models.user import UserModel
 from schemas.user import UserSchema
@@ -75,15 +75,18 @@ class UserLogin(Resource):
                     {"access_token": access_token, "refresh_token": refresh_token},
                     200,
                 )
+            else:
+                return {"message": "either password is wrong, or wrong username"}, 401
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401
+
 
 class UserLogout(Resource):
     @classmethod
     @jwt_required
-    def post(cls):
+    def get(cls):
         jti = get_raw_jwt()["jti"]
-        user_id = get_jwt_identity()
+        print(jti)
         BLACKLIST.add(jti)
         return {"message": "Successfully logged out"}, 200
 
@@ -126,5 +129,7 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(cls):
         current_user = get_jwt_identity()
-        new_token = create_access_token(identity=current_user, fresh=False, expires_delta=False)
+        new_token = create_access_token(
+            identity=current_user, fresh=False, expires_delta=False
+        )
         return {"access_token": new_token}, 200
