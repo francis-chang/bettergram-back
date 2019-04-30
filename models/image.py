@@ -8,7 +8,6 @@ class ImageModel(db.Model):
     __tablename__ = "images"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), nullable=False)
     caption = db.Column(db.String(150))
     width = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Integer, nullable=False)
@@ -18,10 +17,6 @@ class ImageModel(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("UserModel")
-
-    @classmethod
-    def find_by_name(cls, name: str) -> "ImageModel":
-        return cls.query.filter_by(name=name).first()
 
     @classmethod
     def find_by_id(cls, _id: int) -> "ImageModel":

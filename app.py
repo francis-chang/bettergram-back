@@ -16,9 +16,11 @@ from resources.user import (
     User,
     UserLogout,
 )
+from resources.image import Image
 from flask_jwt_extended import JWTManager
 from resources.github_login import GithubLogin, GithubAuthorize
 from blacklist import BLACKLIST
+
 
 app = Flask(__name__)
 
@@ -51,6 +53,7 @@ api.add_resource(UserVerify, "/confirmation/<int:user_id>")
 api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(GithubLogin, "/login/github")
 api.add_resource(GithubAuthorize, "/login/github/authorized")
+api.add_resource(Image, "/image")
 
 if __name__ == "__main__":
     db.init_app(app)
