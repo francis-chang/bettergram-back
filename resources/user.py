@@ -67,7 +67,7 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                delta = datetime.timedelta(hours=1)
+                delta = datetime.timedelta(minutes=1)
                 access_token = create_access_token(
                     identity=user.id, fresh=True, expires_delta=delta
                 )

@@ -18,7 +18,7 @@ from resources.user import (
     UserLogout,
 )
 from resources.image import Image
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, create_access_token
 from resources.github_login import GithubLogin, GithubAuthorize
 from blacklist import BLACKLIST
 
@@ -46,6 +46,13 @@ api = Api(app)
 def create_tables():
     db.create_all()
 
+
+@jwt.expired_token_loader
+def expired_token_callback(expired_token):
+    new_token = create_access_token(
+        identity=expired_token["identity"], fresh=False, expires_delta=False
+    )
+    return jsonify({"access_token": new_token}), 401
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_bl(decrypted_token):
