@@ -68,7 +68,7 @@ api.add_resource(UserVerify, "/confirmation/<int:user_id>")
 api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(GithubLogin, "/login/github")
 api.add_resource(GithubAuthorize, "/login/github/authorized")
-api.add_resource(Image, "/image")
+api.add_resource(Image, "/image", "/image/<int:image_id>")
 
 if __name__ == "__main__":
     db.init_app(app)

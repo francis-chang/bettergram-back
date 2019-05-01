@@ -25,7 +25,7 @@ ph = PasswordHasher()
 class User(Resource):
     @classmethod
     @fresh_jwt_required
-    def put(cls, user_id):
+    def put(cls, user_id:int):
         user = UserModel.find_by_id(user_id)
         identity = get_jwt_identity()
         authed_user = UserModel.find_by_id(identity)
@@ -44,6 +44,17 @@ class User(Resource):
                 return {"message": "must have to change password or username"}, 400
             return {"message": "successful update"}, 201
         return {"message": "User does not exist"}, 400
+
+    @classmethod
+    @fresh_jwt_required
+    def delete(cls, user_id: int):
+        user = UserModel.find_by_id(user_id)
+        identity = get_jwt_identity()
+
+        if user and user_id == identity:
+            user.delete_from_db()
+            return {"msg":"user deleted"}, 201
+        return {"msg": "unable to find user or you are not the owner of that acc"}
 
 
 class UserRegister(Resource):

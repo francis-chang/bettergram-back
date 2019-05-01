@@ -70,6 +70,19 @@ class Image(Resource):
 
     @classmethod
     @fresh_jwt_required
+    def put(cls, image_id: int):
+        image = ImageModel.find_by_id(image_id)
+        req = request.get_json()
+        if "caption" not in req:
+            return {"message": "caption not in json"}, 400
+        if image:
+            image.caption = req["caption"]
+            image.save_to_db()
+            return {"msg": "caption has changed"}, 201
+        return {"message": "image-id dne"}
+
+    @classmethod
+    @fresh_jwt_required
     def delete(cls, _id: int):
         image = ImageModel.find_by_id(_id)
         if image:
