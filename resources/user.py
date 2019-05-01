@@ -15,6 +15,7 @@ from schemas.user import UserSchema
 from argon2 import PasswordHasher, exceptions
 from blacklist import BLACKLIST
 import datetime
+import json
 
 
 user_schema = UserSchema()
@@ -23,7 +24,7 @@ ph = PasswordHasher()
 
 class User(Resource):
     @classmethod
-    @jwt_required
+    @fresh_jwt_required
     def put(cls, user_id):
         user = UserModel.find_by_id(user_id)
         identity = get_jwt_identity()
@@ -33,11 +34,15 @@ class User(Resource):
                 return {"message": "unauthorized"}, 401
 
             user_json = request.get_json()
-            username = user_json["username"]
-
-            user.username = username
-            user.save_to_db()
-            return {"message": "sucessful update of username"}, 201
+            if "username" in user_json:
+                user.username = user_json["username"]
+                user.save_to_db()
+            elif "password" in user_json:
+                user.password = ph.hash(user_json["password"])
+                user.save_to_db()
+            else:
+                return {"message": "must have to change password or username"}, 400
+            return {"message": "sucessful update"}, 201
         return {"message": "User does not exist"}, 400
 
 
@@ -67,7 +72,7 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                delta = datetime.timedelta(minutes=1)
+                delta = datetime.timedelta(hours=1)
                 access_token = create_access_token(
                     identity=user.id, fresh=True, expires_delta=delta
                 )
