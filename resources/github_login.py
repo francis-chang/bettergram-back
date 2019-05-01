@@ -2,6 +2,7 @@ from flask_restful import Resource
 from oauth import github
 from flask import g
 from flask_jwt_extended import create_access_token, create_refresh_token
+import datetime
 
 from models.user import UserModel
 
@@ -25,10 +26,13 @@ class GithubAuthorize(Resource):
         user = UserModel.find_by_username(github_username)
 
         if not user:
-            user = UserModel(username=github_username, password=None)
+            user = UserModel(username=github_username, password=None, email=None, activated=True)
             user.save_to_db()
 
-        access_token = create_access_token(identity=user.id, fresh=True)
+        delta = datetime.timedelta(hours=1)
+        access_token = create_access_token(
+            identity=user.id, fresh=True, expires_delta=delta
+        )
         refresh_token = create_refresh_token(user.id)
 
         return {"access_token": access_token, "refresh_token": refresh_token}, 200

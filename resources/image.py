@@ -73,6 +73,9 @@ class Image(Resource):
     def put(cls, image_id: int):
         image = ImageModel.find_by_id(image_id)
         req = request.get_json()
+        identity = get_jwt_identity()
+        if identity != image.user_id:
+            return {"message": "you are not allowed to do that"}, 401
         if "caption" not in req:
             return {"message": "caption not in json"}, 400
         if image:

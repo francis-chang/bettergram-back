@@ -25,7 +25,7 @@ ph = PasswordHasher()
 class User(Resource):
     @classmethod
     @fresh_jwt_required
-    def put(cls, user_id:int):
+    def put(cls, user_id: int):
         user = UserModel.find_by_id(user_id)
         identity = get_jwt_identity()
         authed_user = UserModel.find_by_id(identity)
@@ -53,7 +53,7 @@ class User(Resource):
 
         if user and user_id == identity:
             user.delete_from_db()
-            return {"msg":"user deleted"}, 201
+            return {"msg": "user deleted"}, 201
         return {"msg": "unable to find user or you are not the owner of that acc"}
 
 

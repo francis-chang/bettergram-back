@@ -12,9 +12,11 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80))
-    email = db.Column(db.String(80), nullable=False, unique=True)
+    email = db.Column(db.String(80), unique=True)
     activated = db.Column(db.Boolean, nullable=False, default=False)
-    images = db.relationship("ImageModel", backref='image', lazy="dynamic", cascade="all,delete")
+    images = db.relationship(
+        "ImageModel", backref="image", lazy="dynamic", cascade="all,delete"
+    )
 
     @classmethod
     def find_by_username(cls, username: str):
