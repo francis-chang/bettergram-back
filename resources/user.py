@@ -42,7 +42,7 @@ class User(Resource):
                 user.save_to_db()
             else:
                 return {"message": "must have to change password or username"}, 400
-            return {"message": "sucessful update"}, 201
+            return {"message": "successful update"}, 201
         return {"message": "User does not exist"}, 400
 
 

@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, fresh_jwt_required
 from cloudinary.utils import cloudinary_url
 from cloudinary.uploader import upload
 from flask import request
@@ -67,3 +67,12 @@ class Image(Resource):
                 return {"message": "error uploading file"}, 500
             return image_obj.json(), 201
         return {"message": "Please select an image"}, 401
+
+    @classmethod
+    @fresh_jwt_required
+    def delete(cls, _id: int):
+        image = ImageModel.find_by_id(_id)
+        if image:
+            image.delete_from_db()
+            return {"message": "image deleted"}, 200
+        return {"message": "image not found"}, 404
