@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify
 from flask_restful import Api
 from dotenv import load_dotenv
+from flask_cors import CORS
 import cloudinary
 
 load_dotenv(".env", verbose=True)
@@ -24,7 +25,7 @@ from blacklist import BLACKLIST
 
 
 app = Flask(__name__)
-
+cors = CORS(app)
 
 app.config.from_object("default_config")  # load default configs from default_config.py
 app.config.from_envvar(

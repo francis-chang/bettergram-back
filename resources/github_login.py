@@ -11,7 +11,7 @@ class GithubLogin(Resource):
     @classmethod
     def get(cls):
         return github.authorize(
-            callback="http://localhost:5000/login/github/authorized"
+            callback="http://localhost:3000/github/authorize"
         )
 
 

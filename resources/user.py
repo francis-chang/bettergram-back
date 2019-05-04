@@ -93,7 +93,7 @@ class UserLogin(Resource):
                     200,
                 )
             else:
-                return {"message": "either password is wrong, or wrong username"}, 401
+                return {"message": "incorrect login"}, 401
         except exceptions.VerifyMismatchError:
             return {"message": "invalid credentials"}, 401
 
