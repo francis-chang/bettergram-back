@@ -36,12 +36,12 @@ class Image(Resource):
                         },
                     ],
                 )[0]
-                upload_height = round(185 * image_sizes[1] / image_sizes[0])
+                upload_height = round(370 * image_sizes[1] / image_sizes[0])
                 upload_url = cloudinary_url(
                     uploaded_image["public_id"],
                     transformation = [
                         {"width": 370, "height": upload_height},
-                        {"crop": "crop", "width": 185, "x": 92, "height": 185},
+                        {"crop": "crop", "width": 185, "x": 92, "height": upload_height},
                         {
                             "format": "jpg",
                             "width": 185,
@@ -59,10 +59,11 @@ class Image(Resource):
                     width=450,
                     quality="auto:good",
                 )[0]
+                upload_height = round(185 * image_sizes[1] / image_sizes[0])
                 upload_url = cloudinary_url(
                     uploaded_image["public_id"],
                     transformation=[
-                        {"width": 185, "height": height},
+                        {"width": 185, "height": upload_height},
                         {"crop": "crop", "width": 185, "height": 185, "format": "jpg", "quality": "auto:good"}
                     ]
                 )[0]
