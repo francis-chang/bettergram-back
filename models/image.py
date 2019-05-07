@@ -12,8 +12,8 @@ class ImageModel(db.Model):
     width = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Integer, nullable=False)
     url = db.Column(db.String(200), nullable=False)
+    upload_url = db.Column(db.String(200), nullable=False)
     full_size_url = db.Column(db.String(200), nullable=False)
-    is_long = db.Column(db.Boolean, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("UserModel")
@@ -52,8 +52,8 @@ class ImageModel(db.Model):
         dict = {
             "id": self.id,
             "url": self.url,
+            "upload_url": self.upload_url,
             "full_url": self.full_size_url,
-            "height": self.height,
-            "is_long": self.is_long,
+            "height": self.height
         }
         return dict

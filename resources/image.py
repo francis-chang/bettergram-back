@@ -21,14 +21,13 @@ class Image(Resource):
             height = image_sizes[1]
 
             if width / height > 1.6:
-                width = 700
-                height = round(700 * image_sizes[1] / image_sizes[0])
+                url_height = round(700 * image_sizes[1] / image_sizes[0])
 
                 url = cloudinary_url(
                     uploaded_image["public_id"],
                     transformation=[
                         {"width": 700, "height": height},
-                        {"crop": "crop", "width": 450, "x": 125, "height": height},
+                        {"crop": "crop", "width": 450, "x": 125, "height": url_height},
                         {
                             "format": "jpg",
                             "width": 450,
@@ -37,9 +36,22 @@ class Image(Resource):
                         },
                     ],
                 )[0]
-                is_long = True
+                upload_height = round(185 * image_sizes[1] / image_sizes[0])
+                upload_url = cloudinary_url(
+                    uploaded_image["public_id"],
+                    transformation = [
+                        {"width": 370, "height": upload_height},
+                        {"crop": "crop", "width": 185, "x": 92, "height": 185},
+                        {
+                            "format": "jpg",
+                            "width": 185,
+                            "height": 185,
+                            "quality": "auto:good",
+                        },
+                    ]
+                )[0]
+
             else:
-                width = 450
                 height = round(450 * image_sizes[1] / image_sizes[0])
                 url = cloudinary_url(
                     uploaded_image["public_id"],
@@ -47,7 +59,14 @@ class Image(Resource):
                     width=450,
                     quality="auto:good",
                 )[0]
-                is_long = False
+                upload_url = cloudinary_url(
+                    uploaded_image["public_id"],
+                    transformation=[
+                        {"width": 185, "height": height},
+                        {"crop": "crop", "width": 185, "height": 185, "format": "jpg", "quality": "auto:good"}
+                    ]
+                )[0]
+
 
             full_size_url = cloudinary_url(uploaded_image["public_id"], format="jpg")[0]
 
@@ -57,8 +76,8 @@ class Image(Resource):
                 full_size_url=full_size_url,
                 width=width,
                 height=height,
-                is_long=is_long,
                 user_id=user_id,
+                upload_url=upload_url
             )
 
             try:
