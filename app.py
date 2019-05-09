@@ -53,7 +53,7 @@ def expired_token_callback(expired_token):
     new_token = create_access_token(
         identity=expired_token["identity"], fresh=False, expires_delta=False
     )
-    return jsonify({"access_token": new_token}), 401
+    return jsonify({"access_token": new_token, "message": "EXPIRED_JWT"}), 401
 
 
 @jwt.token_in_blacklist_loader
