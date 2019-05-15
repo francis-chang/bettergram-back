@@ -25,14 +25,14 @@ class GithubAuthorize(Resource):
 
         if not user:
             user = UserModel(
-                username=github_username, password=None, email=None, activated=True
+                username=github_username, password=None, email=None, activated=True, github_activated=False
             )
             user.save_to_db()
 
-        delta = datetime.timedelta(minutes=1)
+        delta = datetime.timedelta(hours=1)
         access_token = create_access_token(
             identity=user.id, fresh=True, expires_delta=delta
         )
         refresh_token = create_refresh_token(user.id)
 
-        return {"access_token": access_token, "refresh_token": refresh_token}, 200
+        return {"access_token": access_token, "refresh_token": refresh_token, "github_activated": user.github_activated}, 200

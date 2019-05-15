@@ -14,9 +14,11 @@ class UserModel(db.Model):
     password = db.Column(db.String(80))
     email = db.Column(db.String(80), unique=True)
     activated = db.Column(db.Boolean, nullable=False, default=False)
+    github_activated = db.Column(db.Boolean, nullable=True)
     images = db.relationship(
         "ImageModel", backref="image", lazy="dynamic", cascade="all,delete"
     )
+
 
     @classmethod
     def find_by_username(cls, username: str):

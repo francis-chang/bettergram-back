@@ -44,6 +44,17 @@ class UserUpdate(Resource):
         return {"message": "successful update"}, 201
 
 
+class UserInfo(Resource):
+    @classmethod
+    @jwt_required
+    def get(cls):
+        identity = get_jwt_identity()
+        user = UserModel.find_by_id(identity)
+        if user:
+            return {"user_id": user.id, "is_verified": user.activated, "github_verified": user.github_activated}, 200
+        return {"message": "user not found"}, 404
+
+
 class User(Resource):
     @classmethod
     @fresh_jwt_required
@@ -83,7 +94,7 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                delta = datetime.timedelta(minutes=1)
+                delta = datetime.timedelta(hours=1)
                 access_token = create_access_token(
                     identity=user.id, fresh=True, expires_delta=delta
                 )
