@@ -33,15 +33,20 @@ class UserUpdate(Resource):
         if "username" in user_json:
             authed_user.username = user_json["username"]
             authed_user.save_to_db()
-        elif "email" in user_json:
+        if "email" in user_json:
             authed_user.email = user_json["email"]
             authed_user.save_to_db()
-        elif "password" in user_json:
+        if "password" in user_json:
             authed_user.password = ph.hash(user_json["password"])
             authed_user.save_to_db()
-        else:
-            return {"message": "must have to change password or username"}, 400
-        return {"message": "successful update"}, 201
+        if authed_user.email and authed_user.password:
+            authed_user.github_activated = True
+            authed_user.save_to_db()
+
+
+        #     authed_user.github_activated = True
+        #     authed_user.save_to_db()
+        return {"message": "successful update", "github_verified":authed_user.github_activated}, 201
 
 
 class UserInfo(Resource):
