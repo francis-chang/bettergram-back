@@ -29,7 +29,7 @@ class GithubAuthorize(Resource):
             user = UserModel(username=github_username, password=None, email=None, activated=True)
             user.save_to_db()
 
-        delta = datetime.timedelta(hours=1)
+        delta = datetime.timedelta(minutes=1)
         access_token = create_access_token(
             identity=user.id, fresh=True, expires_delta=delta
         )

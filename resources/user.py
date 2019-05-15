@@ -37,6 +37,9 @@ class User(Resource):
             if "username" in user_json:
                 user.username = user_json["username"]
                 user.save_to_db()
+            elif "email" in user_json:
+                user.email = user_json["email"]
+                user.save_to_db()
             elif "password" in user_json:
                 user.password = ph.hash(user_json["password"])
                 user.save_to_db()
@@ -83,7 +86,7 @@ class UserLogin(Resource):
 
         try:
             if user and ph.verify(user.password, user_data.password):
-                delta = datetime.timedelta(hours=1)
+                delta = datetime.timedelta(minutes=1)
                 access_token = create_access_token(
                     identity=user.id, fresh=True, expires_delta=delta
                 )
