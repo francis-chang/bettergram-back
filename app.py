@@ -17,6 +17,7 @@ from resources.user import (
     TokenRefresh,
     User,
     UserLogout,
+    UserUpdate,
 )
 from resources.image import Image
 from flask_jwt_extended import JWTManager, create_access_token
@@ -64,6 +65,7 @@ def check_if_token_in_bl(decrypted_token):
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserLogout, "/logout")
+api.add_resource(UserUpdate, "/user")
 api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserVerify, "/confirmation/<int:user_id>")
 api.add_resource(TokenRefresh, "/refresh")

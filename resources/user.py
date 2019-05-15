@@ -22,32 +22,29 @@ user_schema = UserSchema()
 ph = PasswordHasher()
 
 
-class User(Resource):
+class UserUpdate(Resource):
     @classmethod
     @fresh_jwt_required
-    def put(cls, user_id: int):
-        user = UserModel.find_by_id(user_id)
+    def put(cls):
         identity = get_jwt_identity()
         authed_user = UserModel.find_by_id(identity)
-        if user:
-            if user.username != authed_user.username:
-                return {"message": "unauthorized"}, 401
 
-            user_json = request.get_json()
-            if "username" in user_json:
-                user.username = user_json["username"]
-                user.save_to_db()
-            elif "email" in user_json:
-                user.email = user_json["email"]
-                user.save_to_db()
-            elif "password" in user_json:
-                user.password = ph.hash(user_json["password"])
-                user.save_to_db()
-            else:
-                return {"message": "must have to change password or username"}, 400
-            return {"message": "successful update"}, 201
-        return {"message": "User does not exist"}, 400
+        user_json = request.get_json()
+        if "username" in user_json:
+            authed_user.username = user_json["username"]
+            authed_user.save_to_db()
+        elif "email" in user_json:
+            authed_user.email = user_json["email"]
+            authed_user.save_to_db()
+        elif "password" in user_json:
+            authed_user.password = ph.hash(user_json["password"])
+            authed_user.save_to_db()
+        else:
+            return {"message": "must have to change password or username"}, 400
+        return {"message": "successful update"}, 201
 
+
+class User(Resource):
     @classmethod
     @fresh_jwt_required
     def delete(cls, user_id: int):
