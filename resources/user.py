@@ -12,6 +12,7 @@ from flask_jwt_extended import (
 from models.image import ImageModel
 from models.user import UserModel
 from schemas.user import UserSchema
+from schemas.image import ImageSchema
 from argon2 import PasswordHasher, exceptions
 from blacklist import BLACKLIST
 import datetime
@@ -71,6 +72,14 @@ class User(Resource):
             user.delete_from_db()
             return {"msg": "user deleted"}, 201
         return {"msg": "unable to find user or you are not the owner of that acc"}
+
+    @classmethod
+    def get(cls, username:str):
+        user = UserModel.find_by_username(username)
+        if user:
+            return {"user": user.id, "images": [img.json() for img in user.images.all()]}, 201
+        else:
+            return {"message": "cannot find user"}
 
 
 class UserRegister(Resource):
