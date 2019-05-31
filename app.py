@@ -18,7 +18,7 @@ from resources.user import (
     User,
     UserLogout,
     UserUpdate,
-    UserInfo
+    UserInfo,
 )
 from resources.image import Image
 from flask_jwt_extended import JWTManager, create_access_token

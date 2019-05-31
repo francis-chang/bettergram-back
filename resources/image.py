@@ -58,6 +58,7 @@ class Image(Resource):
 
             else:
                 height = round(450 * image_sizes[1] / image_sizes[0])
+
                 url = cloudinary_url(
                     uploaded_image["public_id"],
                     format="jpg",

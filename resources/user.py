@@ -44,10 +44,15 @@ class UserUpdate(Resource):
             authed_user.github_activated = True
             authed_user.save_to_db()
 
-
         #     authed_user.github_activated = True
         #     authed_user.save_to_db()
-        return {"message": "successful update", "github_verified":authed_user.github_activated}, 201
+        return (
+            {
+                "message": "successful update",
+                "github_verified": authed_user.github_activated,
+            },
+            201,
+        )
 
 
 class UserInfo(Resource):
@@ -57,7 +62,14 @@ class UserInfo(Resource):
         identity = get_jwt_identity()
         user = UserModel.find_by_id(identity)
         if user:
-            return {"user_id": user.id, "is_verified": user.activated, "github_verified": user.github_activated}, 200
+            return (
+                {
+                    "user_id": user.id,
+                    "is_verified": user.activated,
+                    "github_verified": user.github_activated,
+                },
+                200,
+            )
         return {"message": "user not found"}, 404
 
 
@@ -74,10 +86,13 @@ class User(Resource):
         return {"msg": "unable to find user or you are not the owner of that acc"}
 
     @classmethod
-    def get(cls, username:str):
+    def get(cls, username: str):
         user = UserModel.find_by_username(username)
         if user:
-            return {"user": user.id, "images": [img.json() for img in user.images.all()]}, 201
+            return (
+                {"user": user.id, "images": [img.json() for img in user.images.all()]},
+                200,
+            )
         else:
             return {"message": "cannot find user"}
 

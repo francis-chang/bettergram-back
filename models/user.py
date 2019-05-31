@@ -19,7 +19,6 @@ class UserModel(db.Model):
         "ImageModel", backref="image", lazy="dynamic", cascade="all,delete"
     )
 
-
     @classmethod
     def find_by_username(cls, username: str):
         return cls.query.filter_by(username=username).first()
