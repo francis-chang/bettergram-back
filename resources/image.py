@@ -26,12 +26,12 @@ class Image(Resource):
                 url = cloudinary_url(
                     uploaded_image["public_id"],
                     transformation=[
-                        {"width": 700, "height": height},
+                        {"width": 700, "height": url_height},
                         {"crop": "crop", "width": 450, "x": 125, "height": url_height},
                         {
                             "format": "jpg",
                             "width": 450,
-                            "height": height,
+                            "height": url_height,
                             "quality": "auto:good",
                         },
                     ],
