@@ -44,6 +44,7 @@ class GithubAuthorize(Resource):
                 "access_token": access_token,
                 "refresh_token": refresh_token,
                 "github_activated": user.github_activated,
+                "username": user.username
             },
             200,
         )

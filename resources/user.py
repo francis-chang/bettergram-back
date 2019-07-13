@@ -76,14 +76,14 @@ class UserInfo(Resource):
 class User(Resource):
     @classmethod
     @fresh_jwt_required
-    def delete(cls, user_id: int):
-        user = UserModel.find_by_id(user_id)
+    def delete(cls, username: str):
+        user = UserModel.find_by_username(username)
         identity = get_jwt_identity()
-
-        if user and user_id == identity:
+        user_confirm = UserModel.find_by_id(identity)
+        if user.username == user_confirm.username:
             user.delete_from_db()
             return {"msg": "user deleted"}, 201
-        return {"msg": "unable to find user or you are not the owner of that acc"}
+        return {"msg": "unable to find user or you are not the owner of that acc"}, 404
 
     @classmethod
     def get(cls, username: str):
@@ -129,7 +129,7 @@ class UserLogin(Resource):
                 )
                 refresh_token = create_refresh_token(user.id)
                 return (
-                    {"access_token": access_token, "refresh_token": refresh_token},
+                    {"access_token": access_token, "refresh_token": refresh_token , "username": user.username},
                     200,
                 )
             else:
